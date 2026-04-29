@@ -1,4 +1,4 @@
-import { View, Text, Image, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
 import React from 'react';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { useMutation } from '@tanstack/react-query';
@@ -10,23 +10,40 @@ GoogleSignin.configure({
 });
 const LoginScreen = () => {
   const [phoneNumber, setPhoneNumber] = React.useState('');
+  const [signingIn, setSigningIn] = React.useState(false);
   const loginMutation = useMutation({
     mutationFn: loginWithGoogle,
     onSuccess: data => {
+      console.log("sucess");
       resetAndNavigate('HomeScreen');
+    },
+    onError: (error: any) => {
+      Alert.alert('Login Failed', error?.response?.data?.message || error?.message || 'Something went wrong');
     },
   });
 
-  const handleGoogleLogin = async () => {
-    try {
-      await GoogleSignin.hasPlayServices();
-      const response = await GoogleSignin.signIn();
+const handleGoogleLogin = async () => {
+  if (signingIn) return;
+  setSigningIn(true);
+  try {
+    await GoogleSignin.hasPlayServices();
+    await GoogleSignin.signOut();
+    const response = await GoogleSignin.signIn();
 
-      loginMutation.mutate(response.data?.idToken as string);
-    } catch (error) {
-      console.error('Google Sign-In error:', error);
+    const idToken = response.data?.idToken;
+   console.log(idToken);
+    if (!idToken) {
+      console.log('No idToken received');
+      return;
     }
-  };
+
+    loginMutation.mutate(idToken);
+  } catch (error) {
+    console.error('Google Sign-In error:', error);
+  } finally {
+    setSigningIn(false);
+  }
+};
 
   return (
     <View>

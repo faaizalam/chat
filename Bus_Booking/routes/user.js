@@ -1,5 +1,6 @@
 import { refreshAccessToken, loginOrSignup } from '../controllers/user.js';
 import express from 'express';
+import { verifyToken } from '../middelware/verify.js';
 
 const router = express.Router();
 

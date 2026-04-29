@@ -10,6 +10,8 @@ export const getUserTickets = async (req, res) => {
       return res.status(401).json({ message: 'Unauthorized' });
     }
 
+
+  console.log("hello");
     //
     const tickets = await Ticket.find({ user: userId })
       .populate('bus', 'busId from to company departureTime arrivalTime price')

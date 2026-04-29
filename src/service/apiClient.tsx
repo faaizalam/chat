@@ -10,7 +10,7 @@ const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
   config => {
-    const token = handleStorage('getAccessToken', 'accessToken');
+    const token = handleStorage('getAccessToken',"", 'accessToken');
     if (token) {
       config.headers = config.headers || {};
       config.headers.Authorization = `Bearer ${token}`;
@@ -28,7 +28,7 @@ apiClient.interceptors.response.use(
   },
   async error => {
     if (error.response && error.response.status === 403) {
-      const refreshToken = handleStorage('getRefreshToken', 'refreshToken');
+      const refreshToken = handleStorage('getRefreshToken',"", 'refreshToken');
 
       if (!refreshToken) {
         return Promise.reject(error);

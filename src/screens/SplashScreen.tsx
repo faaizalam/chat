@@ -12,9 +12,10 @@ type DecodedToken = {
 const SplashScreen = () => {
   console.log('SplashScreen rendered');
   const tokenCheck = async () => {
-    const accessToken = handleStorage('getAccessToken', 'accessToken');
+    const accessToken = handleStorage('getAccessToken',"", 'accessToken');
     const refreshToken = handleStorage(
       'getRefreshToken',
+      "",
       'refreshToken',
     ) as string;
     if (!accessToken) {
@@ -36,6 +37,9 @@ const SplashScreen = () => {
       return;
     }
     if (decodedAccessToken?.exp < currentTime) {
+
+      console.log(decodedAccessToken);
+      console.log(decodedRefreshToken);
       const refreshed = await refresh_tokens();
       if (!refreshed) {
         Alert.alert('there was an error');

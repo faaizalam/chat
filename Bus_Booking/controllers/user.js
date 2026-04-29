@@ -6,6 +6,7 @@ import { verifyToken } from '../middelware/verify.js';
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const generateTokens = user => {
+  console.log(process.env.ACCESS_TOKEN_SECRET, process.env.REFRESH_TOKEN_SECRET);
   const accessToken = () => {
     return jwt.sign({ id: user._id }, process.env.ACCESS_TOKEN_SECRET, {
       expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
@@ -18,14 +19,15 @@ const generateTokens = user => {
     });
   };
 
-  return { accessToken, refreshToken };
+  return { accessToken: accessToken(), refreshToken: refreshToken() };
 };
 
-export const loginOrSignup = async (req, res) => {
-  const { token } = req.body;
+export const loginOrSignup = async (req, res,next) => {
+  const { id_token } = req.body;
   try {
+    console.log(id_token);
     const ticket = await client.verifyIdToken({
-      idToken: token,
+      idToken: id_token,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
     const { name, email, picture, sub, email_verified } = ticket.getPayload();
@@ -55,19 +57,21 @@ export const loginOrSignup = async (req, res) => {
   }
 };
 
-export const refreshAccessToken = async (req, res) => {
+export const refreshAccessToken = async (req, res,next) => {
   const { refreshToken } = req.body;
   if (!refreshToken) {
+    console.log("");
     return res.status(400).json({ message: 'No refresh token provided' });
   }
   try {
-    const decoded = verifyToken(refreshToken, process.env.REFRESH_TOKEN_SECRET);
-    const user = await User.findById(decoded.id);
+    //  await verifyToken(req,res,next);
+     console.log(req.userId,"yaha");
+    const user = await User.findById(req.userId);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    const token = generateTokens(user).accessToken();
+    const token = generateTokens(user).accessToken;
     res.json({ accessToken: token });
   } catch (error) {
     console.error('Error during token refresh:', error);

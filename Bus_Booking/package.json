@@ -2,7 +2,7 @@
   "name": "bus_booking",
   "version": "1.0.0",
   "description": "",
-  "main": "main.js",
+  "main": "app.js",
   "scripts": {
     "start": "nodemon app.js",
     "seed:data": "node seedScript"

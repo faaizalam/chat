@@ -1,12 +1,15 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 import connectDB from './config/connect.js';
 import { PORT } from './config/config.js';
 import userRoutes from './routes/user.js';
 import busesRoutes from './routes/bus.js';
 import ticketRoutes from './routes/ticket.js';
 import { buildAdminJs } from './config/setup.js';
+
 dotenv.config();
 
 const app = express();
