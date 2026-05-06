@@ -1,11 +1,11 @@
-import { View, Text, Alert, Touchable, Image, TouchableOpacity } from 'react-native'
+import { View, Text, Alert, Image, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import { navigate } from '../../utils/NavigationUtils';
-
 import LinearGradient from 'react-native-linear-gradient';
 import { MagnifyingGlassIcon } from 'react-native-heroicons/solid';
-import { DocumentMagnifyingGlassIcon } from 'react-native-heroicons/solid';
 import { CalendarDaysIcon } from 'react-native-heroicons/solid';
+import DatePickerModal from '../ui/DatePickerModal';
+import LocationPicker from '../ui/LocationPicker';
 
 
 
@@ -57,6 +57,8 @@ const Search = () => {
   }
 
 
+  console.log(showDatePicker);
+
   return (
     <View className="rounded-b-3xl overflow-hidden  ">
       <LinearGradient colors={["#78B0E6", "#fff"]} start={{ x: 1, y: 1 }} end={{ x: 1, y: 0 }}>
@@ -107,15 +109,15 @@ const Search = () => {
               </View>
               <TouchableOpacity className='flex-row items-center ' onPress={() => setShowDatePicker(true)}>
                 <View className='mx-2'>
-                <Text className='font-bold text-gray-500 font-okra'>
-                  Date of Journey
-                </Text>
-                <Text className='font-bold text-gray-500 font-okra'>
-                  {date?.toDateString()}
-                </Text>
-     
+                  <Text className='font-bold text-gray-500 font-okra'>
+                    Date of Journey
+                  </Text>
+                  <Text className='font-bold text-gray-500 font-okra'>
+                    {date?.toDateString()}
+                  </Text>
+
                 </View>
-                <CalendarDaysIcon color={"#000"} size={25}/>
+                <CalendarDaysIcon color={"#000"} size={25} />
               </TouchableOpacity>
             </View>
           </View>
@@ -131,6 +133,35 @@ const Search = () => {
         </View>
 
       </LinearGradient>
+      {showDatePicker && (
+        <DatePickerModal
+          visible={showDatePicker}
+          onClose={() => {
+            setShowDatePicker(false)
+          }}
+          onConfirm={setDate}
+          selectedDate={date}
+        />
+
+      )}
+
+
+      {
+        showLocationPicker && (
+
+          <LocationPicker
+            visible={showLocationPicker}
+            fromLocation={from || undefined}
+            type={locationType}
+            onSelect={handleLocationSet}
+            onClose={() => {
+              setShowLocationPicker(false)
+            }}
+          />
+        )
+      }
+
+
     </View>
   )
 }

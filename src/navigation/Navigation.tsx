@@ -5,6 +5,7 @@ import SplashScreen from '../screens/SplashScreen';
 import LoginScreen from '../screens/LoginScreen';
 import { navigationRef } from '../utils/NavigationUtils';
 import Home from '../screens/Home';
+import BusListScreen from '../screens/BusListScreen';
 const Navigation = () => {
   const Stack = createNativeStackNavigator();
   return (
@@ -18,6 +19,7 @@ const Navigation = () => {
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
         <Stack.Screen name="HomeScreen" component={Home} />
+        <Stack.Screen name="BusListScreen" component={BusListScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

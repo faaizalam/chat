@@ -8,13 +8,13 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const generateTokens = user => {
   console.log(process.env.ACCESS_TOKEN_SECRET, process.env.REFRESH_TOKEN_SECRET);
   const accessToken = () => {
-    return jwt.sign({ id: user._id }, process.env.ACCESS_TOKEN_SECRET, {
+    return jwt.sign({ userId: user._id }, process.env.ACCESS_TOKEN_SECRET, {
       expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
     });
   };
 
   const refreshToken = () => {
-    return jwt.sign({ id: user._id }, process.env.REFRESH_TOKEN_SECRET, {
+    return jwt.sign({ userId: user._id }, process.env.REFRESH_TOKEN_SECRET, {
       expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
     });
   };
@@ -60,13 +60,13 @@ export const loginOrSignup = async (req, res,next) => {
 export const refreshAccessToken = async (req, res,next) => {
   const { refreshToken } = req.body;
   if (!refreshToken) {
-    console.log("");
+    
     return res.status(400).json({ message: 'No refresh token provided' });
   }
   try {
     //  await verifyToken(req,res,next);
-     console.log(req.userId,"yaha");
-    const user = await User.findById(req.userId);
+     const decoded=jwt.verify(refreshToken,process.env.REFRESH_TOKEN_SECRET)
+    const user = await User.findById(decoded.userId);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }

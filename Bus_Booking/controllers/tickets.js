@@ -2,20 +2,24 @@ import Bus from '../model/bus.js';
 import Ticket from '../model/ticket.js';
 import User from '../model/user.js';
 import { v4 as uuidv4 } from 'uuid';
-
+import jwt from 'jsonwebtoken';
 export const getUserTickets = async (req, res) => {
   try {
-    const userId = req.userId;
-    if (!userId) {
+    const token = req.headers.authorization?.split(' ')[1]
+    console.log(token,"loo");
+    const decoded=await jwt.decode(token,process.env.ACCESS_TOKEN_SECRET)
+    console.log(decoded.userId);
+    if (!decoded.userId) {
       return res.status(401).json({ message: 'Unauthorized' });
     }
 
 
   console.log("hello");
     //
-    const tickets = await Ticket.find({ user: userId })
+    const tickets = await Ticket.find({ user: decoded.userId })
       .populate('bus', 'busId from to company departureTime arrivalTime price')
       .sort({ bookedAt: -1 });
+      console.log(tickets);
     res.status(200).json({ tickets: tickets || [] });
   } catch (error) {
     res.status(500).json({ message: 'Internal server error' });
