@@ -3,6 +3,8 @@ import apiClient from "../apiClient";
 
 export const fetchBuses = async (from: string, to: string, date: string) => {
     try {
+
+        console.log(from,to,date);
         const { data } = await apiClient.post('/bus/search', {
             from,
             to,
@@ -32,11 +34,16 @@ export const fetchUserTickets = async () => {
 }
 
 
-export const bookTicket = async (busId: string, seatNumbers: number[], date: string) => {
+type ticketDataProps = {
+  busId: string
+  seatNumbers: number[]
+  date: string
+}
+export const bookTicket = async (ticketData: ticketDataProps) => {
     const { data } = await apiClient.post('/ticket/book', {
-        busId,
-        seats: seatNumbers,
-        date
+        busId: ticketData.busId,
+        seats: ticketData.seatNumbers,
+        date: ticketData.date
     })
     return data?.ticket || []
 }

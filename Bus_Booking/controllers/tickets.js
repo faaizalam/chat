@@ -16,6 +16,7 @@ export const getUserTickets = async (req, res) => {
 
   console.log("hello");
     //
+    console.log(decoded.userId);
     const tickets = await Ticket.find({ user: decoded.userId })
       .populate('bus', 'busId from to company departureTime arrivalTime price')
       .sort({ bookedAt: -1 });
@@ -29,7 +30,8 @@ export const getUserTickets = async (req, res) => {
 export const bookTicket = async (req, res) => {
   try {
     const userId = req.userId;
-    const { busId, date, seatNumbers } = req.body;
+    const { busId, date, seats:seatNumbers } = req.body;
+    console.log(req.body);
     if (
       !busId ||
       !date ||
@@ -39,7 +41,7 @@ export const bookTicket = async (req, res) => {
     ) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
-
+   console.log("passed");
     const targetDate = new Date(date);
 
     if (isNaN(targetDate.getTime())) {
@@ -54,6 +56,8 @@ export const bookTicket = async (req, res) => {
       return res.status(404).json({ message: 'Bus not found' });
     }
 
+
+    console.log(userId,"useId");
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });

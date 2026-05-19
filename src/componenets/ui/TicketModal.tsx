@@ -13,7 +13,7 @@ const TicketModal = ({ onClose, visible, bookingInfo }: TickeModalProps) => {
     return (
         <Modal visible={visible} transparent animationType='slide'>
             <View className='flex-1 justify-center items-center' style={{ backgroundColor: "#2A2526" }}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={()=>onClose()}>
                     <XMarkIcon size={22} color='black' />
                 </TouchableOpacity>
                 <View className='bg-white overflow-hidden rounded-xl w-[90%] p-4 shadow-lg relative'>

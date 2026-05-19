@@ -11,23 +11,49 @@ import { buses } from 'src/utils/dummyData'
 const BusListScreen = () => {
     const route = useRoute()
     const params = route.params as any
-
-
+    
     const { from, to, date } = params.item || {}
     console.log(date);
-    const { data:buses, isLoading, error } = useQuery({ queryKey: ['searchBuses', from, to, date], queryFn: () => fetchBuses(from, to, date), enabled: !!from && !!to && !!date })
-   
-   const renderItem=({item}: {item: any})=>{
+    const { data: buses, isLoading, error } = useQuery({ queryKey: ['searchBuses', from, to, date], queryFn: () => fetchBuses(from, to, date), enabled: !!from && !!to && !!date })
+    
+    const renderItem = ({ item }: { item: any }) => {
+       
         return (
             <TouchableOpacity
-            className='bg-white mb-4 p-4 rounded-lg shadow-sm'
-            onPress={()=>navigate("SeatSelectionScreen",{busId:item.busId})}
+                className='bg-white mb-4 p-4 rounded-lg shadow-xl elevation-xl'
+                onPress={() => navigate("SeatSelectionScreen", { busId: item.busId })}
             >
+                <Image source={require("../assets/images/sidebus.png")} className='h-6 w-8' />
+                <Text className='text-lg font-bold text-gray-900'>{item.company}</Text>
+                <Text className='text-sm  text-gray-500'>{item.busType}</Text>
+                <View className='flex-row justify-between mt-2'>
+                    <Text className='text-gray-700 font-bold'>
+                        {new Date(item.departureTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}
+                        {" "} - {" "}
+                        {new Date(item.arrivalTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}
 
+
+                    </Text>
+
+
+                </View>
+                <View className="flex-row justify-between mt-2 items-center">
+                    <Text className="text-md text-green-600 font-bold">
+                        {item.price}$
+                    </Text>
+
+                    <Text className="text-xs text-gray-400 line-through">
+                        {item.originalPrice}
+                    </Text>
+
+                    <Text className="text-sm text-gray-600">
+                       {item.seats.flat().filter((seat:any)=> !seat.isBooked).length} Seats Available
+                    </Text>
+                </View>
             </TouchableOpacity>
         )
-   }
-   console.log(buses,error);
+    }
+    console.log(buses, error);
     return (
         <View className='flex-1 bg-white'>
             <SafeAreaView />
@@ -45,7 +71,7 @@ const BusListScreen = () => {
             </View>
             {
                 isLoading && (
-                    <View  className='flex-1 justify-center items-center'>
+                    <View className='flex-1 justify-center items-center'>
                         <ActivityIndicator size={"large"} color="teal" />
                         <Text className=''>Loading buses....</Text>
                     </View>
@@ -53,26 +79,26 @@ const BusListScreen = () => {
             }
             {
                 error && (
-                    <View  className='flex-1 justify-center items-center'>
+                    <View className='flex-1 justify-center items-center'>
                         <Text className='text-red-500 font-bold text-center'>Error loading buses:{error.message} </Text>
-                        
+
                     </View>
                 )
             }
             {
                 !error && !isLoading && buses.length === 0 && (
-                    <View  className='flex-1 justify-center items-center'>
+                    <View className='flex-1 justify-center items-center'>
                         <Text className="text-gray-500 font-bold">No Buses found</Text>
-                        
+
                     </View>
                 )
             }
 
             <FlatList
-            data={buses}
-            renderItem={renderItem}
-            keyExtractor={(item)=>item.busId}
-            contentContainerStyle={{padding:16}}
+                data={buses}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.busId}
+                contentContainerStyle={{ padding: 16 }}
             />
 
 

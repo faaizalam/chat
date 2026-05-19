@@ -5,12 +5,12 @@ export const getBusDetails = async (req, res) => {
     // Fetch bus details from the database (replace with actual DB call)
 
     const { busId } = req.params;
-
+   console.log("1");
     if (!busId) {
       return res.status(404).json({ message: 'Bus not found' });
     }
 
-    const bus = await Bus.findById(busId);
+    const bus = await Bus.findOne({ busId });
     if (!bus) {
       return res.status(404).json({ message: 'Bus not found' });
     }
@@ -48,15 +48,14 @@ export const searchBuses = async (req, res) => {
       return res.status(400).json({ message: 'Missing required fields' });
     }
 
+    console.log(date);
+
+
     const requestedDateAndTime = new Date(date);
+    // console.log(requestedDateAndTime);
     if (isNaN(requestedDateAndTime.getTime())) {
       return res.status(400).json({ message: 'Invalid date format' });
     }
-    const curentDate = Date.now();
-    if (requestedDateAndTime.getTime() < curentDate) {
-      return res.status(400).json({ message: 'Date must be in the future' });
-    }
-
     const startTime = new Date(
       Date.UTC(
         requestedDateAndTime.getUTCFullYear(),
@@ -80,6 +79,12 @@ export const searchBuses = async (req, res) => {
         999,
       ),
     );
+    const curentDate = new Date();
+    curentDate.setUTCHours(0, 0, 0, 0);
+    if (startTime < curentDate) {
+      return res.status(400).json({ message: 'Date must be in the future' });
+    }
+
     const buses = await Bus.find({
       from: from,
       to: to,

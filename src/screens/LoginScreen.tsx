@@ -39,7 +39,11 @@ const handleGoogleLogin = async () => {
 
     loginMutation.mutate(idToken);
   } catch (error) {
-    console.error('Google Sign-In error:', error);
+    const errorMessage =error instanceof Error
+      ? (error as any)?.response?.data?.message || error.message || 'Unknown error'
+      : 'Unknown error';
+    Alert.alert('Google Sign-In Failed', errorMessage);
+    console.error('Google Sign-In errors:', errorMessage);
   } finally {
     setSigningIn(false);
   }
