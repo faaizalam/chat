@@ -1,3 +1,14 @@
+App look:
+<img width="389" height="781" alt="image" src="https://github.com/user-attachments/assets/373e3359-41fc-4b93-ae90-bf0627a5e09b" />
+
+<img width="352" height="900" alt="image" src="https://github.com/user-attachments/assets/e8a3bf6a-daeb-4601-b4da-c58a4a97c10d" />
+
+<img width="1780" height="883" alt="image" src="https://github.com/user-attachments/assets/259f88b7-f023-4f6d-8cbd-47ef91d19fb9" />
+<img width="355" height="752" alt="image" src="https://github.com/user-attachments/assets/eb0bcab6-1ece-4801-a82c-3a4784a7c021" />
+<img width="418" height="907" alt="image" src="https://github.com/user-attachments/assets/4e0c4b9a-c054-467d-9e94-e5efdcfcd318" />
+
+
+
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
 # Getting Started
